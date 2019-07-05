@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package proto;
+
+message Request {
+    string mess = 1;
+}
+
+message Response {
+    bool received = 1;
+}
+
+service ChatService {
+    rpc SendMessage(Request) returns (Response);
+}
