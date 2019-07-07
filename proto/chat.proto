@@ -12,7 +12,8 @@ message SendMessageResponse {
 
 message HandShakeRequest {
     string ip = 1;
-    string name =2;
+    string name = 2;
+    string address = 3;
 }
 
 message HandShakeResponse {

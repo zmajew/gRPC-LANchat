@@ -14,5 +14,9 @@ func (node *Node) SendMessage(ctx context.Context, stream *ch.SendMessageRequest
 
 func (node *Node) HandShake(ctx context.Context, knocknock *ch.HandShakeRequest) (*ch.HandShakeResponse, error) {
 	os.Stderr.WriteString(knocknock.Name + " is online\n")
+
+	node.PeerBook[knocknock.Address] = new(Peer)
+	node.PeerBook[knocknock.Address].HostName = knocknock.Name
+
 	return &ch.HandShakeResponse{Ip: node.IP, Name: node.HostName}, nil
 }

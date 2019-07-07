@@ -20,6 +20,7 @@ import (
 type Peer struct {
 	HostName string
 	IP       string
+	Address  string
 	Client   ch.ChatServiceClient
 }
 
@@ -72,6 +73,10 @@ func (node *Node) SetupClient(addr string) error {
 	node.PeerBook[addr].Client = client
 	node.PeerBook[addr].HostName = res.Name
 	node.PeerBook[addr].IP = res.Ip
+
+	if len(node.PeerBook) == 0 {
+		os.Stderr.WriteString("No one is on chat\n")
+	}
 
 	return nil
 }
