@@ -19,7 +19,7 @@ func (node *Node) HandShake(ctx context.Context, knocknock *ch.HandShakeRequest)
 
 	node.PeerBook[address] = new(Peer)
 	node.PeerBook[address].HostName = knocknock.Name
-
+	fmt.Println(address)
 	err := node.SetupClient(address)
 	if err != nil {
 		os.Stderr.WriteString(node.PeerBook[address].HostName + " is not online\n")

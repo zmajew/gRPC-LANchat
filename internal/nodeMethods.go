@@ -65,7 +65,7 @@ func (node *Node) SetupClient(addr string) error {
 	//deadline := time.Now().Add(1000 * time.Microsecond)
 	//ctx, _ := context.WithDeadline(context.Background(), deadline)
 
-	res, err := client.HandShake(context.Background(), &ch.HandShakeRequest{Name: node.HostName})
+	res, err := client.HandShake(context.Background(), &ch.HandShakeRequest{Name: node.HostName, Address: node.Address})
 	if err != nil {
 		return err
 	}
