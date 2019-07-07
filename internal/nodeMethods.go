@@ -156,7 +156,12 @@ func (node *Node) ScanLan() {
 	for i := 2; i < 6; i++ {
 		re := regexp.MustCompile(`(\d{1,3}\.\d{1,3}\.\d{1,3}\.)\d{1,3}`)
 		match := re.FindAllStringSubmatch(node.IP, -1)
-		address := match[0][1] + strconv.Itoa(i) + ":4040"
+		ip := match[0][1] + strconv.Itoa(i)
+		if ip == node.IP {
+			continue
+		}
+
+		address := ip + ":4040"
 
 		go func() {
 			err := node.SetupClient(address)
