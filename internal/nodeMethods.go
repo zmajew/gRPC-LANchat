@@ -22,7 +22,6 @@ type Peer struct {
 }
 
 type Node struct {
-	Name     string
 	IP       string
 	HostName string
 	Port     string
@@ -73,6 +72,7 @@ func (node *Node) SetupClient(addr string) error {
 
 func (node *Node) Start() error {
 	node.PeerBook = make(map[string]*Peer)
+	node.Port = "4040"
 
 	address := node.IP + ":" + node.Port
 	fmt.Println("Your chat addres is:", address)
