@@ -93,10 +93,6 @@ func (node *Node) SetupClient(addr string) error {
 	node.PeerBook[addr].HostName = res.Name
 	node.PeerBook[addr].IP = res.Ip
 
-	if len(node.PeerBook) == 0 {
-		os.Stderr.WriteString("No one is on chat\n")
-	}
-
 	return nil
 }
 
@@ -104,8 +100,6 @@ func (node *Node) Start() error {
 	node.PeerBook = make(map[string]*Peer)
 	node.Port = "4040"
 	node.Address = node.IP + ":" + node.Port
-
-	fmt.Println("Your chat addres is:", node.Address)
 
 	go node.StartListening()
 
@@ -144,10 +138,10 @@ func (node *Node) Start() error {
 		m := scanner.Text()
 		message := fmt.Sprintf("%s: %s", node.HostName, m)
 		for _, peer := range node.PeerBook {
-			_, err := peer.Client.SendMessage(context.Background(), &ch.SendMessageRequest{Mess: message})
-			if err != nil {
-				log.Printf("%s did not received message: %v", peer.HostName, err)
-			}
+			_, _ = peer.Client.SendMessage(context.Background(), &ch.SendMessageRequest{Mess: message})
+			// if err != nil {
+			// 	log.Printf("%s did not received message: %v", peer.HostName, err)
+			// }
 		}
 
 	}
@@ -188,30 +182,30 @@ func (node *Node) GetOwnLanIp() error {
 func (node *Node) ScanLan() {
 	re := regexp.MustCompile(`(\d{1,3}\.\d{1,3}\.\d{1,3}\.)\d{1,3}`)
 	match := re.FindAllStringSubmatch(node.IP, -1)
+	fmt.Println("Connecting to the chat nodes, please wait...")
 
-	i := 2
-	//ch := make(chan int, 100)
+	var wg sync.WaitGroup
 
-	for i < 256 {
-		//time.Sleep(time.Microsecond * 100)
-
+	for i := 2; i < 256; i++ {
+		wg.Add(1)
 		ip := match[0][1] + strconv.Itoa(i)
-		i++
-		if i == 255 {
-			break
-		}
+
 		if ip == node.IP {
+			wg.Done()
 			continue
 		}
 
 		address := ip + ":4040"
 
 		go func() {
-
 			err := node.SetupClient(address)
 			if err == nil {
 				os.Stderr.WriteString(node.PeerBook[address].HostName + " is online\n")
 			}
+			wg.Done()
+			//fmt.Println(address)
 		}()
 	}
+	wg.Wait()
+	fmt.Printf("computers on the chat: %d\n", len(node.PeerBook))
 }
