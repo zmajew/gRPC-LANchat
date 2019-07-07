@@ -22,103 +22,212 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type Request struct {
+type SendMessageRequest struct {
 	Mess                 string   `protobuf:"bytes,1,opt,name=mess,proto3" json:"mess,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Request) Reset()         { *m = Request{} }
-func (m *Request) String() string { return proto.CompactTextString(m) }
-func (*Request) ProtoMessage()    {}
-func (*Request) Descriptor() ([]byte, []int) {
+func (m *SendMessageRequest) Reset()         { *m = SendMessageRequest{} }
+func (m *SendMessageRequest) String() string { return proto.CompactTextString(m) }
+func (*SendMessageRequest) ProtoMessage()    {}
+func (*SendMessageRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8c585a45e2093e54, []int{0}
 }
 
-func (m *Request) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Request.Unmarshal(m, b)
+func (m *SendMessageRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SendMessageRequest.Unmarshal(m, b)
 }
-func (m *Request) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Request.Marshal(b, m, deterministic)
+func (m *SendMessageRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SendMessageRequest.Marshal(b, m, deterministic)
 }
-func (m *Request) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Request.Merge(m, src)
+func (m *SendMessageRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SendMessageRequest.Merge(m, src)
 }
-func (m *Request) XXX_Size() int {
-	return xxx_messageInfo_Request.Size(m)
+func (m *SendMessageRequest) XXX_Size() int {
+	return xxx_messageInfo_SendMessageRequest.Size(m)
 }
-func (m *Request) XXX_DiscardUnknown() {
-	xxx_messageInfo_Request.DiscardUnknown(m)
+func (m *SendMessageRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_SendMessageRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Request proto.InternalMessageInfo
+var xxx_messageInfo_SendMessageRequest proto.InternalMessageInfo
 
-func (m *Request) GetMess() string {
+func (m *SendMessageRequest) GetMess() string {
 	if m != nil {
 		return m.Mess
 	}
 	return ""
 }
 
-type Response struct {
+type SendMessageResponse struct {
 	Received             bool     `protobuf:"varint,1,opt,name=received,proto3" json:"received,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Response) Reset()         { *m = Response{} }
-func (m *Response) String() string { return proto.CompactTextString(m) }
-func (*Response) ProtoMessage()    {}
-func (*Response) Descriptor() ([]byte, []int) {
+func (m *SendMessageResponse) Reset()         { *m = SendMessageResponse{} }
+func (m *SendMessageResponse) String() string { return proto.CompactTextString(m) }
+func (*SendMessageResponse) ProtoMessage()    {}
+func (*SendMessageResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8c585a45e2093e54, []int{1}
 }
 
-func (m *Response) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Response.Unmarshal(m, b)
+func (m *SendMessageResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SendMessageResponse.Unmarshal(m, b)
 }
-func (m *Response) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Response.Marshal(b, m, deterministic)
+func (m *SendMessageResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SendMessageResponse.Marshal(b, m, deterministic)
 }
-func (m *Response) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Response.Merge(m, src)
+func (m *SendMessageResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SendMessageResponse.Merge(m, src)
 }
-func (m *Response) XXX_Size() int {
-	return xxx_messageInfo_Response.Size(m)
+func (m *SendMessageResponse) XXX_Size() int {
+	return xxx_messageInfo_SendMessageResponse.Size(m)
 }
-func (m *Response) XXX_DiscardUnknown() {
-	xxx_messageInfo_Response.DiscardUnknown(m)
+func (m *SendMessageResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_SendMessageResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Response proto.InternalMessageInfo
+var xxx_messageInfo_SendMessageResponse proto.InternalMessageInfo
 
-func (m *Response) GetReceived() bool {
+func (m *SendMessageResponse) GetReceived() bool {
 	if m != nil {
 		return m.Received
 	}
 	return false
 }
 
+type HandShakeRequest struct {
+	Ip                   string   `protobuf:"bytes,1,opt,name=ip,proto3" json:"ip,omitempty"`
+	Name                 string   `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *HandShakeRequest) Reset()         { *m = HandShakeRequest{} }
+func (m *HandShakeRequest) String() string { return proto.CompactTextString(m) }
+func (*HandShakeRequest) ProtoMessage()    {}
+func (*HandShakeRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8c585a45e2093e54, []int{2}
+}
+
+func (m *HandShakeRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_HandShakeRequest.Unmarshal(m, b)
+}
+func (m *HandShakeRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_HandShakeRequest.Marshal(b, m, deterministic)
+}
+func (m *HandShakeRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_HandShakeRequest.Merge(m, src)
+}
+func (m *HandShakeRequest) XXX_Size() int {
+	return xxx_messageInfo_HandShakeRequest.Size(m)
+}
+func (m *HandShakeRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_HandShakeRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_HandShakeRequest proto.InternalMessageInfo
+
+func (m *HandShakeRequest) GetIp() string {
+	if m != nil {
+		return m.Ip
+	}
+	return ""
+}
+
+func (m *HandShakeRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+type HandShakeResponse struct {
+	Wake                 bool     `protobuf:"varint,1,opt,name=wake,proto3" json:"wake,omitempty"`
+	Ip                   string   `protobuf:"bytes,2,opt,name=ip,proto3" json:"ip,omitempty"`
+	Name                 string   `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *HandShakeResponse) Reset()         { *m = HandShakeResponse{} }
+func (m *HandShakeResponse) String() string { return proto.CompactTextString(m) }
+func (*HandShakeResponse) ProtoMessage()    {}
+func (*HandShakeResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8c585a45e2093e54, []int{3}
+}
+
+func (m *HandShakeResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_HandShakeResponse.Unmarshal(m, b)
+}
+func (m *HandShakeResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_HandShakeResponse.Marshal(b, m, deterministic)
+}
+func (m *HandShakeResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_HandShakeResponse.Merge(m, src)
+}
+func (m *HandShakeResponse) XXX_Size() int {
+	return xxx_messageInfo_HandShakeResponse.Size(m)
+}
+func (m *HandShakeResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_HandShakeResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_HandShakeResponse proto.InternalMessageInfo
+
+func (m *HandShakeResponse) GetWake() bool {
+	if m != nil {
+		return m.Wake
+	}
+	return false
+}
+
+func (m *HandShakeResponse) GetIp() string {
+	if m != nil {
+		return m.Ip
+	}
+	return ""
+}
+
+func (m *HandShakeResponse) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
 func init() {
-	proto.RegisterType((*Request)(nil), "proto.Request")
-	proto.RegisterType((*Response)(nil), "proto.Response")
+	proto.RegisterType((*SendMessageRequest)(nil), "proto.SendMessageRequest")
+	proto.RegisterType((*SendMessageResponse)(nil), "proto.SendMessageResponse")
+	proto.RegisterType((*HandShakeRequest)(nil), "proto.HandShakeRequest")
+	proto.RegisterType((*HandShakeResponse)(nil), "proto.HandShakeResponse")
 }
 
 func init() { proto.RegisterFile("chat.proto", fileDescriptor_8c585a45e2093e54) }
 
 var fileDescriptor_8c585a45e2093e54 = []byte{
-	// 145 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4a, 0xce, 0x48, 0x2c,
-	0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x05, 0x53, 0x4a, 0xb2, 0x5c, 0xec, 0x41, 0xa9,
-	0x85, 0xa5, 0xa9, 0xc5, 0x25, 0x42, 0x42, 0x5c, 0x2c, 0xb9, 0xa9, 0xc5, 0xc5, 0x12, 0x8c, 0x0a,
-	0x8c, 0x1a, 0x9c, 0x41, 0x60, 0xb6, 0x92, 0x1a, 0x17, 0x47, 0x50, 0x6a, 0x71, 0x41, 0x7e, 0x5e,
-	0x71, 0xaa, 0x90, 0x14, 0x17, 0x47, 0x51, 0x6a, 0x72, 0x6a, 0x66, 0x59, 0x6a, 0x0a, 0x58, 0x0d,
-	0x47, 0x10, 0x9c, 0x6f, 0x64, 0xcb, 0xc5, 0xed, 0x9c, 0x91, 0x58, 0x12, 0x9c, 0x5a, 0x54, 0x96,
-	0x99, 0x9c, 0x2a, 0xa4, 0xc7, 0xc5, 0x1d, 0x9c, 0x9a, 0x97, 0xe2, 0x9b, 0x5a, 0x5c, 0x9c, 0x98,
-	0x9e, 0x2a, 0xc4, 0x07, 0xb1, 0x53, 0x0f, 0x6a, 0x93, 0x14, 0x3f, 0x9c, 0x0f, 0x31, 0x3a, 0x89,
-	0x0d, 0xcc, 0x37, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0x05, 0x77, 0xc7, 0x32, 0xa1, 0x00, 0x00,
-	0x00,
+	// 230 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x90, 0xc1, 0x4e, 0x85, 0x30,
+	0x10, 0x45, 0x43, 0x7d, 0x9a, 0xc7, 0x90, 0x18, 0x1d, 0x17, 0x62, 0x57, 0xa6, 0x2b, 0x56, 0x24,
+	0x6a, 0xe2, 0xd2, 0x8d, 0x2e, 0x4c, 0x8c, 0x1b, 0xf8, 0x82, 0x0a, 0x13, 0x69, 0x08, 0xa5, 0xd2,
+	0x8a, 0x1f, 0xe2, 0x0f, 0x1b, 0x4a, 0x83, 0x28, 0x6f, 0xd5, 0x69, 0xee, 0x9d, 0x73, 0x67, 0x06,
+	0xa0, 0x6a, 0xa4, 0xcb, 0xcd, 0xd0, 0xbb, 0x1e, 0x8f, 0xfd, 0x23, 0x32, 0xc0, 0x92, 0x74, 0xfd,
+	0x4a, 0xd6, 0xca, 0x77, 0x2a, 0xe8, 0xe3, 0x93, 0xac, 0x43, 0x84, 0x5d, 0x47, 0xd6, 0xa6, 0xd1,
+	0x75, 0x94, 0xc5, 0x85, 0xaf, 0xc5, 0x0d, 0x5c, 0xfc, 0x71, 0x5a, 0xd3, 0x6b, 0x4b, 0xc8, 0x61,
+	0x3f, 0x50, 0x45, 0x6a, 0xa4, 0xda, 0xdb, 0xf7, 0xc5, 0xf2, 0x17, 0xf7, 0x70, 0xf6, 0x2c, 0x75,
+	0x5d, 0x36, 0xb2, 0x5d, 0xd0, 0xa7, 0xc0, 0x94, 0x09, 0x60, 0xa6, 0xcc, 0x14, 0xa5, 0x65, 0x47,
+	0x29, 0x9b, 0xa3, 0xa6, 0x5a, 0xbc, 0xc0, 0xf9, 0xaa, 0x2f, 0x04, 0x21, 0xec, 0xbe, 0x64, 0x4b,
+	0x21, 0xc4, 0xd7, 0x01, 0xc6, 0x36, 0xb0, 0xa3, 0x5f, 0xd8, 0xed, 0x77, 0x04, 0xc9, 0x63, 0x23,
+	0x5d, 0x49, 0xc3, 0xa8, 0x2a, 0xc2, 0x27, 0x48, 0x56, 0x7b, 0xe0, 0xd5, 0x7c, 0x8f, 0x7c, 0x7b,
+	0x05, 0xce, 0x0f, 0x49, 0x61, 0x9a, 0x07, 0x88, 0x97, 0x11, 0xf1, 0x32, 0x18, 0xff, 0x2f, 0xcb,
+	0xd3, 0xad, 0x30, 0xf7, 0xbf, 0x9d, 0x78, 0xe1, 0xee, 0x27, 0x00, 0x00, 0xff, 0xff, 0xc6, 0xfd,
+	0xbc, 0x8b, 0x93, 0x01, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -133,7 +242,8 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ChatServiceClient interface {
-	SendMessage(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
+	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
+	HandShake(ctx context.Context, in *HandShakeRequest, opts ...grpc.CallOption) (*HandShakeResponse, error)
 }
 
 type chatServiceClient struct {
@@ -144,9 +254,18 @@ func NewChatServiceClient(cc *grpc.ClientConn) ChatServiceClient {
 	return &chatServiceClient{cc}
 }
 
-func (c *chatServiceClient) SendMessage(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
-	out := new(Response)
+func (c *chatServiceClient) SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error) {
+	out := new(SendMessageResponse)
 	err := c.cc.Invoke(ctx, "/proto.ChatService/SendMessage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *chatServiceClient) HandShake(ctx context.Context, in *HandShakeRequest, opts ...grpc.CallOption) (*HandShakeResponse, error) {
+	out := new(HandShakeResponse)
+	err := c.cc.Invoke(ctx, "/proto.ChatService/HandShake", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +274,8 @@ func (c *chatServiceClient) SendMessage(ctx context.Context, in *Request, opts .
 
 // ChatServiceServer is the server API for ChatService service.
 type ChatServiceServer interface {
-	SendMessage(context.Context, *Request) (*Response, error)
+	SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error)
+	HandShake(context.Context, *HandShakeRequest) (*HandShakeResponse, error)
 }
 
 func RegisterChatServiceServer(s *grpc.Server, srv ChatServiceServer) {
@@ -163,7 +283,7 @@ func RegisterChatServiceServer(s *grpc.Server, srv ChatServiceServer) {
 }
 
 func _ChatService_SendMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Request)
+	in := new(SendMessageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -175,7 +295,25 @@ func _ChatService_SendMessage_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: "/proto.ChatService/SendMessage",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServiceServer).SendMessage(ctx, req.(*Request))
+		return srv.(ChatServiceServer).SendMessage(ctx, req.(*SendMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ChatService_HandShake_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandShakeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatServiceServer).HandShake(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.ChatService/HandShake",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatServiceServer).HandShake(ctx, req.(*HandShakeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -187,6 +325,10 @@ var _ChatService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SendMessage",
 			Handler:    _ChatService_SendMessage_Handler,
+		},
+		{
+			MethodName: "HandShake",
+			Handler:    _ChatService_HandShake_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

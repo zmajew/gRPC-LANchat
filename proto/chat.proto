@@ -2,23 +2,26 @@ syntax = "proto3";
 
 package proto;
 
-message Request {
+message SendMessageRequest {
     string mess = 1;
 }
 
-message Response {
+message SendMessageResponse {
     bool received = 1;
 }
 
-message AreYouWake {
-    bool wake = 1;
+message HandShakeRequest {
+    string ip = 1;
+    string name =2;
 }
 
-message MyLoundery {
-    string name = 1;
+message HandShakeResponse {
+    bool wake = 1;
+    string ip = 2;
+    string name = 3;
 }
 
 service ChatService {
-    rpc SendMessage(Request) returns (Response);
-    rpc HandShake(AreYouWake) returns (MyLoundery);
+    rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+    rpc HandShake(HandShakeRequest) returns (HandShakeResponse);
 }
