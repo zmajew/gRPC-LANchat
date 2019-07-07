@@ -51,6 +51,24 @@ func (node *Node) StartListening() {
 	}
 }
 
+func (node *Node) AddClient(addr string) error {
+	conn, err := grpc.Dial(addr, grpc.WithInsecure())
+	if err != nil {
+		log.Printf("Unable to connect to %s: %v", addr, err)
+		return err
+	}
+
+	node.mtx.Lock()
+	defer node.mtx.Unlock()
+
+	client := ch.NewChatServiceClient(conn)
+
+	node.PeerBook[addr] = new(Peer)
+	node.PeerBook[addr].Client = client
+
+	return nil
+}
+
 func (node *Node) SetupClient(addr string) error {
 	conn, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
@@ -60,6 +78,7 @@ func (node *Node) SetupClient(addr string) error {
 
 	node.mtx.Lock()
 	defer node.mtx.Unlock()
+
 	client := ch.NewChatServiceClient(conn)
 
 	//deadline := time.Now().Add(1000 * time.Microsecond)
