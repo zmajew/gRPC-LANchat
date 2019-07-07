@@ -60,7 +60,7 @@ func (node *Node) SetupClient(addr string) error {
 	node.PeerBook[addr] = new(Peer)
 	node.PeerBook[addr].Client = a
 
-	res, err := node.PeerBook[addr].Client.HandShake(context.Background(), &ch.HandShakeRequest{})
+	res, err := node.PeerBook[addr].Client.HandShake(context.Background(), &ch.HandShakeRequest{Name: node.HostName})
 	if err != nil {
 		return err
 	}
