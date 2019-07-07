@@ -10,6 +10,15 @@ message Response {
     bool received = 1;
 }
 
+message AreYouWake {
+    bool wake = 1;
+}
+
+message MyLoundery {
+    string name = 1;
+}
+
 service ChatService {
     rpc SendMessage(Request) returns (Response);
+    rpc HandShake(AreYouWake) returns (MyLoundery);
 }
