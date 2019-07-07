@@ -8,6 +8,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"sync"
 
 	ch "primjeri/gRPC-LANchat/proto"
 
@@ -26,6 +27,7 @@ type Node struct {
 	HostName string
 	Port     string
 	PeerBook map[string]*Peer
+	mtx      sync.RWMutex
 }
 
 func (node *Node) StartListening() {
@@ -49,16 +51,20 @@ func (node *Node) StartListening() {
 
 func (node *Node) SetupClient(addr string) error {
 	conn, err := grpc.Dial(addr, grpc.WithInsecure())
-
 	if err != nil {
 		log.Printf("Unable to connect to %s: %v", addr, err)
 		return err
 	}
 
+	node.mtx.Lock()
+	defer node.mtx.Unlock()
 	a := ch.NewChatServiceClient(conn)
 
 	node.PeerBook[addr] = new(Peer)
 	node.PeerBook[addr].Client = a
+
+	//deadline := time.Now().Add(1000 * time.Microsecond)
+	//ctx, _ := context.WithDeadline(context.Background(), deadline)
 
 	res, err := node.PeerBook[addr].Client.HandShake(context.Background(), &ch.HandShakeRequest{Name: node.HostName})
 	if err != nil {
@@ -153,10 +159,20 @@ func (node *Node) GetOwnLanIp() error {
 }
 
 func (node *Node) ScanLan() {
-	for i := 2; i < 6; i++ {
-		re := regexp.MustCompile(`(\d{1,3}\.\d{1,3}\.\d{1,3}\.)\d{1,3}`)
-		match := re.FindAllStringSubmatch(node.IP, -1)
+	re := regexp.MustCompile(`(\d{1,3}\.\d{1,3}\.\d{1,3}\.)\d{1,3}`)
+	match := re.FindAllStringSubmatch(node.IP, -1)
+
+	i := 2
+	//ch := make(chan int, 100)
+
+	for i < 256 {
+		//time.Sleep(time.Microsecond * 100)
+
 		ip := match[0][1] + strconv.Itoa(i)
+		i++
+		if i == 255 {
+			break
+		}
 		if ip == node.IP {
 			continue
 		}
@@ -164,11 +180,11 @@ func (node *Node) ScanLan() {
 		address := ip + ":4040"
 
 		go func() {
+
 			err := node.SetupClient(address)
 			if err == nil {
-				fmt.Println(node.PeerBook[address].HostName)
+				os.Stderr.WriteString(node.PeerBook[address].HostName + " is online\n")
 			}
 		}()
 	}
-
 }
