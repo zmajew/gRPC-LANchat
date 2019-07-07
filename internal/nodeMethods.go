@@ -61,11 +61,12 @@ func (node *Node) SetupClient(addr string) error {
 	node.PeerBook[addr] = new(Peer)
 	node.PeerBook[addr].Client = a
 
-	_, err = node.PeerBook[addr].Client.SendMessage(context.Background(), &ch.SendMessageRequest{Mess: node.Name})
+	res, err := node.PeerBook[addr].Client.HandShake(context.Background(), &ch.HandShakeRequest{})
 	if err != nil {
-		log.Printf("Error making request to %s: %v", addr, err)
 		return err
 	}
+	node.PeerBook[addr].HostName = res.Name
+	node.PeerBook[addr].IP = res.Ip
 
 	return nil
 }
@@ -159,10 +160,9 @@ func (node *Node) ScanLan() {
 
 		go func() {
 			err := node.SetupClient(address)
-			if err != nil {
-				os.Stderr.WriteString("Oops: " + err.Error() + "\n")
+			if err == nil {
+				fmt.Println(node.PeerBook[address].HostName)
 			}
-			fmt.Println(node.PeerBook[address].HostName)
 		}()
 	}
 

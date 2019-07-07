@@ -12,5 +12,5 @@ func (node *Node) SendMessage(ctx context.Context, stream *ch.SendMessageRequest
 }
 
 func (node *Node) HandShake(ctx context.Context, stream *ch.HandShakeRequest) (*ch.HandShakeResponse, error) {
-	return &ch.HandShakeResponse{}, nil
+	return &ch.HandShakeResponse{Ip: node.IP, Name: node.HostName}, nil
 }
