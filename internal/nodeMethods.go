@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"bufio"
 	"context"
 	"fmt"
 	"log"
@@ -58,18 +59,17 @@ func (node *Node) SetupClient(addr string) error {
 
 	node.mtx.Lock()
 	defer node.mtx.Unlock()
-	a := ch.NewChatServiceClient(conn)
-
-	node.PeerBook[addr] = new(Peer)
-	node.PeerBook[addr].Client = a
+	client := ch.NewChatServiceClient(conn)
 
 	//deadline := time.Now().Add(1000 * time.Microsecond)
 	//ctx, _ := context.WithDeadline(context.Background(), deadline)
 
-	res, err := node.PeerBook[addr].Client.HandShake(context.Background(), &ch.HandShakeRequest{Name: node.HostName})
+	res, err := client.HandShake(context.Background(), &ch.HandShakeRequest{Name: node.HostName})
 	if err != nil {
 		return err
 	}
+	node.PeerBook[addr] = new(Peer)
+	node.PeerBook[addr].Client = client
 	node.PeerBook[addr].HostName = res.Name
 	node.PeerBook[addr].IP = res.Ip
 
@@ -85,7 +85,7 @@ func (node *Node) Start() error {
 
 	go node.StartListening()
 
-	var addr string
+	//var addr string
 	node.ScanLan()
 	// 	var again string
 
@@ -115,16 +115,19 @@ func (node *Node) Start() error {
 	// 		}
 	// 	}
 
-	// 	scanner := bufio.NewScanner(os.Stdin)
-	// 	for scanner.Scan() {
-	// 		m := scanner.Text()
-	// 		message := fmt.Sprintf("%s: %s", node.Name, m)
-	// 		_, err := node.PeerBook[addr].Client.SendMessage(context.Background(), &ch.SendMessageRequest{Mess: message})
-	// 		if err != nil {
-	// 			log.Printf("%s did not received message: %v", node.PeerBook[addr].HostName, err)
-	// 		}
-	// 	}
-	fmt.Scanln(&addr)
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		m := scanner.Text()
+		message := fmt.Sprintf("%s: %s", node.HostName, m)
+		for _, peer := range node.PeerBook {
+			_, err := peer.Client.SendMessage(context.Background(), &ch.SendMessageRequest{Mess: message})
+			if err != nil {
+				log.Printf("%s did not received message: %v", peer.HostName, err)
+			}
+		}
+
+	}
+	//fmt.Scanln(&addr)
 	return nil
 }
 
