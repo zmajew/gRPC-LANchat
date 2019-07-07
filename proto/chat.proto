@@ -20,6 +20,7 @@ message HandShakeResponse {
     bool wake = 1;
     string ip = 2;
     string name = 3;
+    string address = 4;
 }
 
 service ChatService {

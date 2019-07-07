@@ -28,13 +28,13 @@ type Node struct {
 	IP       string
 	HostName string
 	Port     string
+	Address  string
 	PeerBook map[string]*Peer
 	mtx      sync.RWMutex
 }
 
 func (node *Node) StartListening() {
-	address := node.IP + ":" + node.Port
-	listen, err := net.Listen("tcp", address)
+	listen, err := net.Listen("tcp", node.Address)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
@@ -84,9 +84,9 @@ func (node *Node) SetupClient(addr string) error {
 func (node *Node) Start() error {
 	node.PeerBook = make(map[string]*Peer)
 	node.Port = "4040"
+	node.Address = node.IP + ":" + node.Port
 
-	address := node.IP + ":" + node.Port
-	fmt.Println("Your chat addres is:", address)
+	fmt.Println("Your chat addres is:", node.Address)
 
 	go node.StartListening()
 
