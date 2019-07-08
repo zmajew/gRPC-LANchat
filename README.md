@@ -10,7 +10,16 @@ Install the script:
 ```sh
 go install
 ```
+or build it:
+```sh
+go build
+```
 Run the instalation:
 ```sh
 gRPC-LANchat
 ```
+or from folder where is builded binary:
+```sh
+./gRPC-LANchat
+```
+Start the node on the diferent computers on the LAN and start chat in the cli.
