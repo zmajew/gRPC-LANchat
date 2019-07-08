@@ -8,6 +8,7 @@ import (
 )
 
 func (node *Node) SendMessage(ctx context.Context, stream *ch.SendMessageRequest) (*ch.SendMessageResponse, error) {
+	go node.BeepMessage()
 	fmt.Println(stream.Mess)
 	return &ch.SendMessageResponse{Received: true}, nil
 }
