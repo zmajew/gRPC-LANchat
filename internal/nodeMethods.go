@@ -31,6 +31,7 @@ type Node struct {
 	Address  string
 	PeerBook map[string]*Peer
 	mtx      sync.RWMutex
+	Volume   int
 }
 
 func (node *Node) StartListening() {
@@ -184,28 +185,31 @@ func (node *Node) ScanLan() {
 	match := re.FindAllStringSubmatch(node.IP, -1)
 	fmt.Println("Connecting to the chat nodes, please wait...")
 
-	var wg sync.WaitGroup
+	var wg0 sync.WaitGroup
+	go func() {
+		wg0.Add(1)
+		var wg sync.WaitGroup
+		for i := 2; i < 255; i++ {
+			wg.Add(1)
+			ip := match[0][1] + strconv.Itoa(i)
 
-	for i := 2; i < 256; i++ {
-		wg.Add(1)
-		ip := match[0][1] + strconv.Itoa(i)
-
-		if ip == node.IP {
-			wg.Done()
-			continue
-		}
-
-		address := ip + ":4040"
-
-		go func() {
-			err := node.SetupClient(address)
-			if err == nil {
-				os.Stderr.WriteString(node.PeerBook[address].HostName + " is online\n")
+			if ip == node.IP {
+				wg.Done()
+				continue
 			}
-			wg.Done()
-			//fmt.Println(address)
-		}()
-	}
-	wg.Wait()
-	fmt.Printf("computers on the chat: %d\n", len(node.PeerBook))
+
+			address := ip + ":4040"
+
+			go func() {
+				err := node.SetupClient(address)
+				if err == nil {
+					os.Stderr.WriteString(node.PeerBook[address].HostName + " is online\n")
+				}
+				wg.Done()
+			}()
+		}
+		wg.Wait()
+		fmt.Printf("computers on the chat: %d\n", len(node.PeerBook))
+	}()
+	wg0.Wait()
 }
