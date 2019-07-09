@@ -7,8 +7,10 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/exec"
 	"regexp"
-	"strconv"
+	"runtime"
+	"strings"
 	"sync"
 
 	ch "primjeri/gRPC-LANchat/proto"
@@ -31,7 +33,7 @@ type Node struct {
 	Address  string
 	PeerBook map[string]*Peer
 	mtx      sync.RWMutex
-	Volume   int
+	Volume   *int
 }
 
 func (node *Node) StartListening() {
@@ -99,40 +101,12 @@ func (node *Node) SetupClient(addr string) error {
 
 func (node *Node) Start() error {
 	node.PeerBook = make(map[string]*Peer)
-	node.Port = "4040"
+	node.Port = "4041"
 	node.Address = node.IP + ":" + node.Port
 
 	go node.StartListening()
 
-	//var addr string
-	node.ScanLan()
-	// 	var again string
-
-	// 	fmt.Printf("Enter the address to chat with (example: 192.168.1.2:4040): ")
-
-	// Loop1:
-	// 	for {
-	// 		fmt.Scanln(&addr)
-	// 		if err := node.SetupClient(addr); err != nil {
-	// 			fmt.Printf("Unable to setup connection with %s: %v\n", addr, err)
-
-	// 			for {
-	// 				fmt.Printf("Do you want to try again [y/n]: ")
-	// 				fmt.Scanln(&again)
-	// 				switch again {
-	// 				case "y":
-	// 					fmt.Printf("Enter the address to chat with (example: 192.168.1.2:4040): ")
-	// 					continue Loop1
-	// 				case "n":
-	// 					return nil
-	// 				default:
-	// 					continue
-	// 				}
-	// 			}
-	// 		} else {
-	// 			break
-	// 		}
-	// 	}
+	node.scanLan()
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
@@ -140,13 +114,9 @@ func (node *Node) Start() error {
 		message := fmt.Sprintf("%s: %s", node.HostName, m)
 		for _, peer := range node.PeerBook {
 			_, _ = peer.Client.SendMessage(context.Background(), &ch.SendMessageRequest{Mess: message})
-			// if err != nil {
-			// 	log.Printf("%s did not received message: %v", peer.HostName, err)
-			// }
 		}
 
 	}
-	//fmt.Scanln(&addr)
 	return nil
 }
 
@@ -154,23 +124,20 @@ func (node *Node) GetOwnLanIp() error {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
 		os.Stderr.WriteString("Oops: " + err.Error() + "\n")
-		//os.Exit(1)
 		return err
 	}
 
-	hostaName, err := os.Hostname()
+	hostName, err := os.Hostname()
 	if err != nil {
 		os.Stderr.WriteString("Oops: " + err.Error() + "\n")
-		//os.Exit(1)
 		return err
 	}
-	node.HostName = hostaName
+	node.HostName = hostName
 
 	for _, a := range addrs {
 		if ipnet, ok := a.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
 			if ipnet.IP.To4() != nil {
 				ip := ipnet.IP.String()
-				//os.Stdout.WriteString(ip + "\n")
 				if ip[:8] == "192.168." {
 					node.IP = ip
 				}
@@ -180,25 +147,28 @@ func (node *Node) GetOwnLanIp() error {
 	return nil
 }
 
-func (node *Node) ScanLan() {
-	re := regexp.MustCompile(`(\d{1,3}\.\d{1,3}\.\d{1,3}\.)\d{1,3}`)
-	match := re.FindAllStringSubmatch(node.IP, -1)
+func (node *Node) scanLan() {
 	fmt.Println("Connecting to the chat nodes, please wait...")
+
+	ips := getLanIPs()
+	if len(ips) == 0 {
+		fmt.Println("LAN is empty, waiting...")
+		return
+	}
 
 	var wg0 sync.WaitGroup
 	go func() {
 		wg0.Add(1)
 		var wg sync.WaitGroup
-		for i := 2; i < 255; i++ {
+		for _, ip := range ips {
 			wg.Add(1)
-			ip := match[0][1] + strconv.Itoa(i)
 
-			if ip == node.IP {
+			if *ip == node.IP {
 				wg.Done()
 				continue
 			}
 
-			address := ip + ":4040"
+			address := *ip + ":4041"
 
 			go func() {
 				err := node.SetupClient(address)
@@ -211,5 +181,54 @@ func (node *Node) ScanLan() {
 		wg.Wait()
 		fmt.Printf("computers on the chat: %d\n", len(node.PeerBook))
 	}()
-	wg0.Wait()
+}
+
+func getLanIPs() []*string {
+	os := runtime.GOOS
+	var out []byte
+	var err error
+	rersponse := []*string{}
+
+	switch os {
+	case "windows":
+		out, err = exec.Command("arp", "-a").Output()
+		errorCheck(err)
+	case "linux":
+		out, err = exec.Command("arp", "-n").Output()
+		errorCheck(err)
+	case "darwin":
+		out, err = exec.Command("arp", "-a").Output()
+		errorCheck(err)
+	}
+
+	temp := strings.Split(string(out), "\n")
+	for _, v := range temp {
+		if strings.Contains(v, "dynamic") {
+			ip := extractIP(v)
+			if isNotRouter(ip) {
+				rersponse = append(rersponse, &ip)
+			}
+		}
+	}
+	return rersponse
+}
+
+func errorCheck(err error) {
+	if err != nil {
+		fmt.Println("Greska:", err)
+	}
+}
+
+func extractIP(s string) string {
+	r := regexp.MustCompile(`\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b`)
+	ip := r.FindString(s)
+
+	return ip
+}
+
+func isNotRouter(s string) bool {
+	if s[len(s)-2:] == ".1" {
+		return false
+	}
+	return true
 }
