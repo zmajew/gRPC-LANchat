@@ -2,6 +2,7 @@ package internal
 
 import (
 	"bufio"
+	"fmt"
 	"strings"
 
 	"github.com/dbatbold/beep"
@@ -10,6 +11,7 @@ import (
 func (node *Node) BeepMessage() {
 	music := beep.NewMusic("") // output can be file as "music.wav"
 	volume := node.Volume
+	fmt.Println(*volume)
 
 	beep.OpenSoundDevice("default")
 
