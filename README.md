@@ -9,7 +9,7 @@ It should work on Linux, Windows and Mac OS.
 
 If there is a problem with establishing chat check if your os firewall or third party firewall is blocking the port "4041".
 
-Please consider that this is simple demonstration GO gRPC script. 
+Consider that this is simple demonstration GO gRPC script. 
 
 ## Usage
 Install or build it from shell or cmd:
