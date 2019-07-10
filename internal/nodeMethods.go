@@ -84,9 +84,6 @@ func (node *Node) SetupClient(addr string) error {
 
 	client := ch.NewChatServiceClient(conn)
 
-	//deadline := time.Now().Add(1000 * time.Microsecond)
-	//ctx, _ := context.WithDeadline(context.Background(), deadline)
-
 	res, err := client.HandShake(context.Background(), &ch.HandShakeRequest{Name: node.HostName, Address: node.Address})
 	if err != nil {
 		return err
@@ -153,6 +150,7 @@ func (node *Node) scanLan() {
 	ips := getLanIPs()
 	if len(ips) == 0 {
 		fmt.Println("LAN is empty, waiting...")
+		fmt.Println("Check if yours or others firewals blocks the trafic, or check if you are on the same domain with the other computers")
 		return
 	}
 
@@ -169,12 +167,13 @@ func (node *Node) scanLan() {
 			}
 
 			address := *ip + ":4041"
-
 			go func() {
 				err := node.SetupClient(address)
 				if err == nil {
 					os.Stderr.WriteString(node.PeerBook[address].HostName + " is online\n")
-				}
+				}// else {
+				// 	fmt.Println(err)
+				// }
 				wg.Done()
 			}()
 		}
@@ -193,6 +192,9 @@ func getLanIPs() []*string {
 	case "windows":
 		out, err = exec.Command("arp", "-a").Output()
 		errorCheck(err)
+		if err != nil {
+			fmt.Println(`Chack if the C:\WINDOWS\SYSTEM32 is added to the Enviroment variables`)
+		}
 	case "linux":
 		out, err = exec.Command("arp", "-n").Output()
 		errorCheck(err)
@@ -215,7 +217,7 @@ func getLanIPs() []*string {
 
 func errorCheck(err error) {
 	if err != nil {
-		fmt.Println("Greska:", err)
+		fmt.Println(err)
 	}
 }
 
