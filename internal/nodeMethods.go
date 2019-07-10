@@ -171,7 +171,7 @@ func (node *Node) scanLan() {
 				err := node.SetupClient(address)
 				if err == nil {
 					os.Stderr.WriteString(node.PeerBook[address].HostName + " is online\n")
-				}// else {
+				} // else {
 				// 	fmt.Println(err)
 				// }
 				wg.Done()
@@ -205,7 +205,7 @@ func getLanIPs() []*string {
 
 	temp := strings.Split(string(out), "\n")
 	for _, v := range temp {
-		if strings.Contains(v, "dynamic") {
+		if strings.Contains(v, "dynamic") || strings.Contains(v, "ether") {
 			ip := extractIP(v)
 			if isNotRouter(ip) {
 				rersponse = append(rersponse, &ip)
