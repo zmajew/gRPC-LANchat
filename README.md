@@ -11,15 +11,29 @@ If there is a problem with establishing chat check if your os firewall or third 
 
 Please consider that this is simple demonstration GO gRPC script. 
 
+## Usage
+Install or build it from shell or cmd:
+
 ```sh
 go install 
 ```
-
-Run the chat application:
+or:
+```sh
+go build 
+```
+Run the chat application on Linux or Mac from shell:
 ```sh
 gRPC-LANchat
 ```
-or 
+or if you build it:
+```sh
+./gRPC-LANchat
+```
+on Windows:
+```sh
+start gRPC-LANchat.exe
+```
+
 Run the chat app with message sound volume reduction:
 ```sh
 gRPC-LANchat -volume <VOLUME> //0-100
