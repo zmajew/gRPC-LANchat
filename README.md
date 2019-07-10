@@ -38,4 +38,5 @@ Run the chat app with message sound volume reduction:
 ```sh
 gRPC-LANchat -volume <VOLUME> //0-100
 ```
+There is Chat.exe and Chat binaries in build folder.
 Start the node on the diferent computers on the LAN and start chat in the cli.
