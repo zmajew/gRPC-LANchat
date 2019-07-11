@@ -160,6 +160,8 @@ func (node *Node) GetOwnLanIp() error {
 			break
 		}
 		node.IP = localIPs[number-1]
+
+		return nil
 	}
 
 	if len(localIPs) == 0 {
@@ -173,8 +175,11 @@ func (node *Node) GetOwnLanIp() error {
 			break
 		}
 		node.IP = ip
+
+		return nil
 	}
 
+	node.IP = localIPs[0]
 	return nil
 }
 
