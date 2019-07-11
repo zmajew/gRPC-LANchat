@@ -37,6 +37,7 @@ type Node struct {
 }
 
 func (node *Node) StartListening() {
+	fmt.Println("Your LAN address is:", node.Address)
 	listen, err := net.Listen("tcp", node.Address)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -131,16 +132,49 @@ func (node *Node) GetOwnLanIp() error {
 	}
 	node.HostName = hostName
 
+	localIPs := []string{}
 	for _, a := range addrs {
 		if ipnet, ok := a.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
 			if ipnet.IP.To4() != nil {
 				ip := ipnet.IP.String()
-				if ip[:8] == "192.168." {
-					node.IP = ip
+				if ip[:8] == "192.168." && ip[len(ip)-1:] != "1" {
+					localIPs = append(localIPs, ip)
 				}
 			}
 		}
 	}
+
+	if len(localIPs) > 1 {
+		number := 0
+		fmt.Println("Your computer has several LAN interfaces: ")
+		for i, v := range localIPs {
+			fmt.Printf("%d.   %s\n", i+1, v)
+		}
+		fmt.Println("Enter the ordinal number of your IP from the list:")
+		for {
+			_, err := fmt.Scan(&number)
+			if err != nil || number > len(localIPs) || number < 1 {
+				fmt.Printf("Enter number in the range %d - %d:\n", 1, len(localIPs)+1)
+				continue
+			}
+			break
+		}
+		node.IP = localIPs[number-1]
+	}
+
+	if len(localIPs) == 0 {
+		fmt.Println("Cannot determine host IP. Enter your LAN IP:")
+		ip := ""
+		for {
+			_, err := fmt.Scan(&ip)
+			if err != nil {
+				continue
+			}
+			break
+		}
+		node.IP = ip
+	}
+
 	return nil
 }
 
