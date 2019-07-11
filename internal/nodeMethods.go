@@ -37,7 +37,6 @@ type Node struct {
 }
 
 func (node *Node) StartListening() {
-	fmt.Println("Your LAN address is:", node.Address)
 	listen, err := net.Listen("tcp", node.Address)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -184,6 +183,7 @@ func (node *Node) GetOwnLanIp() error {
 }
 
 func (node *Node) scanLan() {
+	fmt.Println("Your LAN address is:", node.Address)
 	fmt.Println("Connecting to the chat nodes, please wait...")
 
 	ips := getLanIPs()
