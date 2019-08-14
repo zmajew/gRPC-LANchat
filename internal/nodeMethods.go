@@ -186,16 +186,15 @@ func (node *Node) scanLan() {
 	fmt.Println("Your LAN address is:", node.Address)
 	fmt.Println("Connecting to the chat nodes, please wait...")
 
-	ips := getLanIPs()
+	ips, err := getLanIPs()
+	errorCheck(err)
 	if len(ips) == 0 {
 		fmt.Println("LAN is empty, waiting...")
 		fmt.Println("Check if yours or others firewals blocks the trafic, or check if you are on the same domain with the other computers")
 		return
 	}
 
-	var wg0 sync.WaitGroup
 	go func() {
-		wg0.Add(1)
 		var wg sync.WaitGroup
 		for _, ip := range ips {
 			wg.Add(1)
@@ -221,25 +220,31 @@ func (node *Node) scanLan() {
 	}()
 }
 
-func getLanIPs() []*string {
+func getLanIPs() ([]*string, error) {
 	os := runtime.GOOS
 	var out []byte
 	var err error
-	rersponse := []*string{}
+	response := []*string{}
 
 	switch os {
 	case "windows":
 		out, err = exec.Command("arp", "-a").Output()
-		errorCheck(err)
+		if err != nil {
+			return response, err
+		}
 		if err != nil {
 			fmt.Println(`Chack if the C:\WINDOWS\SYSTEM32 is added to the Enviroment variables`)
 		}
 	case "linux":
 		out, err = exec.Command("arp", "-n").Output()
-		errorCheck(err)
+		if err != nil {
+			return response, err
+		}
 	case "darwin":
 		out, err = exec.Command("arp", "-a").Output()
-		errorCheck(err)
+		if err != nil {
+			return response, err
+		}
 	}
 
 	temp := strings.Split(string(out), "\n")
@@ -247,11 +252,11 @@ func getLanIPs() []*string {
 		if strings.Contains(v, "dynamic") || strings.Contains(v, "ether") {
 			ip := extractIP(v)
 			if isNotRouter(ip) {
-				rersponse = append(rersponse, &ip)
+				response = append(response, &ip)
 			}
 		}
 	}
-	return rersponse
+	return response, nil
 }
 
 func errorCheck(err error) {
@@ -268,8 +273,11 @@ func extractIP(s string) string {
 }
 
 func isNotRouter(s string) bool {
-	if s[len(s)-2:] == ".1" {
-		return false
+	if s != "" {
+		if s[len(s)-2:] == ".1" || s[len(s)-4:] == ".255" || s[len(s)-2:] == ".0" {
+			return false
+		}
+		return true
 	}
-	return true
+	return false
 }
